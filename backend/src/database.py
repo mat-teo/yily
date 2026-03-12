@@ -1,10 +1,16 @@
 # database.py
 from sqlmodel import SQLModel, create_engine, Session
-from models import *  
+from dotenv import load_dotenv
+import os
 
-SQLITE_URL = "sqlite:///database.db"  
+load_dotenv()  # loads .env
 
-engine = create_engine(SQLITE_URL, echo=True)  # echo=False in prod
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL not found in .env")
+
+engine = create_engine(DATABASE_URL, echo=True)  # echo=True console log SQL
 
 def get_session() -> Session:
     with Session(engine) as session:
