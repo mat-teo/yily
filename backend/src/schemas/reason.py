@@ -6,7 +6,6 @@ from datetime import datetime
 
 class ReasonCreate(BaseModel):
     content: str = Field(..., min_length=5, max_length=500)
-    to_user_id: int                  # user ID of the recipient
 
 class ReasonOut(BaseModel):
     id: int

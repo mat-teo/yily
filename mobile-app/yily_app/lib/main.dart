@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:yily_app/providers/auth_provider.dart';
-import 'package:yily_app/screens/onboarding_screen.dart';
-import 'package:yily_app/screens/home_screen.dart';
+import 'core/theme/app_theme.dart';
+import 'providers/auth_provider.dart';
+import 'screens/onboarding_screen.dart';
+import 'screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final authProvider = AuthProvider();
-  await authProvider.init();
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => authProvider,
-      child: const MyApp(),
-    ),
-  );
+  final auth = AuthProvider();
+  await auth.init();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,13 +18,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
-    return MaterialApp(
-      title: 'Yily',
-      theme: ThemeData(primarySwatch: Colors.pink),
-      home: auth.isAuthenticated ? const HomeScreen() : const OnboardingScreen(),
-      routes: {
-        '/home': (_) => const HomeScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // dimensione di riferimento (iPhone 14 / 13)
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return ChangeNotifierProvider(
+          create: (_) => AuthProvider()..init(),
+          child: MaterialApp(
+            title: 'Yily',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.light,
+            initialRoute: '/',  
+            routes: {
+              '/': (context) => Consumer<AuthProvider>(
+                builder: (context, auth, _) => auth.isAuthenticated
+                    ? const HomeScreen()
+                    : const OnboardingScreen(),
+              ),
+              '/home': (context) => const HomeScreen(),
+              '/onboarding': (context) => const OnboardingScreen(),
+            },
+          ),
+        );
       },
     );
   }

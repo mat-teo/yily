@@ -35,6 +35,12 @@ dependencies:
   flutter_secure_storage: ^9.2.2  # save token in secure storage
   provider: ^6.1.2             # simplify state management
   intl: ^0.19.0                # for date formatting
+  google_fonts: ^6.2.1         # for custom fonts
+  flutter_screenutil: ^5.9.3        # responsive scaling
+  shimmer: ^3.0.0                   # loading effects
+  flutter_animate: ^4.5.0           # easy animations
+  flutter_svg: ^2.0.10+1            # SVG support
+  rive: ^0.13.17                   # advanced animations
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

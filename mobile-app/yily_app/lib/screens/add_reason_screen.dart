@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yily_app/services/api_service.dart';
+import'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddReasonScreen extends StatefulWidget {
   const AddReasonScreen({super.key});
@@ -10,57 +11,52 @@ class AddReasonScreen extends StatefulWidget {
 
 class _AddReasonScreenState extends State<AddReasonScreen> {
   final _contentController = TextEditingController();
-  int? _toUserId; // Per MVP assumiamo che conosciamo l'ID del partner (da auth o da /me)
+  bool _isLoading = false;
 
-  // Per semplicità MVP: chiediamo l'ID del partner (in futuro lo prendiamo da API /me)
-  final _toUserIdController = TextEditingController();
+  Future<void> _add() async {
+    if (_contentController.text.trim().isEmpty) return;
 
-  Future<void> _addReason() async {
-    if (_contentController.text.isEmpty || _toUserIdController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Compila tutti i campi')),
-      );
-      return;
-    }
-
+    setState(() => _isLoading = true);
     final api = ApiService();
     try {
-      await api.addReason(
-        _contentController.text,
-        int.parse(_toUserIdController.text),
-      );
+      await api.addReason(_contentController.text.trim()); 
       Navigator.pop(context, true);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Errore: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Errore: $e')));
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Aggiungi motivo')),
+      appBar: AppBar(title: const Text('Nuovo motivo')),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(24.w),
         child: Column(
           children: [
             TextField(
               controller: _contentController,
-              decoration: const InputDecoration(labelText: 'Il motivo...'),
-              maxLines: 5,
+              maxLines: 6,
+              decoration: InputDecoration(
+                hintText: 'Perché lo ami...',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16.r)),
+                filled: true,
+                fillColor: Colors.white,
+              ),
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _toUserIdController,
-              decoration: const InputDecoration(labelText: 'ID del partner'),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _addReason,
-              child: const Text('Aggiungi'),
-            ),
+            SizedBox(height: 32.h),
+            if (_isLoading)
+              const CircularProgressIndicator()
+            else
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _add,
+                  child: const Text('Aggiungi'),
+                ),
+              ),
           ],
         ),
       ),

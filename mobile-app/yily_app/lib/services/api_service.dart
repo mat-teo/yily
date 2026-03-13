@@ -47,10 +47,9 @@ class ApiService {
   }
 
   // Aggiungi motivo
-  Future<Reason> addReason(String content, int toUserId) async {
+  Future<Reason> addReason(String content) async {
     final response = await _dio.post('/reasons/', data: {
-      'content': content,
-      'to_user_id': toUserId,
+      'content': content
     });
     return Reason.fromJson(response.data);
   }

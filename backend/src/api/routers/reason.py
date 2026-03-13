@@ -16,31 +16,23 @@ from api.dependencies import get_current_user
 
 router = APIRouter(prefix="/reasons", tags=["reasons"])
 
-
 @router.post("/", response_model=ReasonOut)
 def add_reason(
     reason: ReasonCreate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_session)
 ):
-    # Ensure to_user_id is the current user's partner
-    partner = db.exec(
-        select(User).where(
-            (User.couple_id == current_user.couple_id) &
-            (User.id != current_user.id)
-        )
-    ).first()
+    couple = current_user.couple
+    if couple is None or len(couple.users) != 2:
+        raise HTTPException(400, "Couple is not properly set up")
 
-    if not partner or partner.id != reason.to_user_id:
-        raise HTTPException(
-            status_code=400,
-            detail="to_user_id must be your partner's user ID"
-        )
-
+    partner = next((u for u in couple.users if u.id != current_user.id), None)
+    if partner is None:
+        raise HTTPException(400, "Partner not found")
     created = create_reason(
         db=db,
         from_user_id=current_user.id,
-        to_user_id=reason.to_user_id,
+        to_user_id=partner.id,
         content=reason.content,
     )
     return created
