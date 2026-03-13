@@ -31,6 +31,8 @@ def create_couple(db: Session, creator_name: str) -> Couple:
 def get_couple_by_token(db: Session, token: str) -> Couple | None:
     return db.exec(select(Couple).where(Couple.token == token)).first()
 
+def get_couple_by_id(db: Session, id: int) -> Couple | None:
+    return db.exec(select(Couple).where(Couple.id == id)).first()
 
 def join_couple(db: Session, token: str, new_name: str) -> Couple | None:
     couple = get_couple_by_token(db, token)

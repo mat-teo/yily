@@ -8,6 +8,7 @@ class ApiService {
     baseUrl: 'http://127.0.0.1:8000/api/v0.1.0',  // backend url
     connectTimeout: Duration(seconds: 10),
     receiveTimeout: Duration(seconds: 10),
+    validateStatus: (status) => status != null && status < 500, // handling 4xx errors in app
   ));
 
   ApiService() {
@@ -33,6 +34,9 @@ class ApiService {
   // Join coppia
   Future<Map<String, dynamic>> joinCouple(String token, String name) async {
     final response = await _dio.post('/couples/join', data: {'token': token, 'name': name});
+    if(response.statusCode == 400 || response.statusCode == 404) {
+      return await recover(token, name);
+    }
     final accessToken = response.data['access_token'];
     await StorageService().saveToken(accessToken);
     return response.data;
@@ -76,6 +80,12 @@ class ApiService {
   // Delete reason
   Future<void> deleteReason(int id) async {
     await _dio.delete('/reasons/$id');
+  }
+
+  // Get user info
+  Future<Map<String, dynamic>> getUserInfo() async {
+    final response = await _dio.get('/couples/us');
+    return response.data;
   }
 
 }

@@ -77,7 +77,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   controller: _nameController,
                   decoration: InputDecoration(
                     labelText: 'Nome',
-                    hintText: 'Come ti chiama il tuo partner?',
                   ),
                 ),
                 if (!_isCreating) ...[
