@@ -5,8 +5,10 @@ import 'package:yily_app/models/reason.dart';
 import 'package:yily_app/services/api_service.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yily_app/widgets/reason_card.dart';
-import 'add_reason_screen.dart';
 import 'reason_screen.dart';
+import 'package:flutter/services.dart'; 
+import 'package:provider/provider.dart';
+import 'package:yily_app/providers/user_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,17 +24,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    Provider.of<UserProvider>(context, listen: false).loadUserInfo();
     _loadUserNames();
     _loadRandomReason();
   }
 
   Future<void> _loadUserNames() async {
     try {
-      final api = ApiService();
-      final userInfo = await api.getUserInfo(); // implementa getUserInfo() in ApiService
+      final userProv = Provider.of<UserProvider>(context, listen: false);
       setState(() {
-        mioNome = userInfo['users'][0]['name']; 
-        partnerNome = userInfo['users'][1]['name'];
+        mioNome = userProv.myName; 
+        partnerNome = userProv.partnerName ?? "Partner";
       });
     } catch (e) {
       setState(() {
@@ -63,8 +65,31 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBodyBehindAppBar: true,
+    appBar: AppBar(
+      title: const Text('Yily'),
+      centerTitle: true,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      actions: [
+        IconButton(
+          icon: Icon(Icons.vpn_key_rounded, color: Colors.black87, size: 24.w),
+          tooltip: 'Mostra codice coppia',
+          onPressed: _showTokenPopup,
+        ),
+      ],
+    ),
       backgroundColor: const Color(0xFFFFF8FA),
-      body: SafeArea(
+      body: 
+        Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFFFF5F8), Color(0xFFFFE9EF)],
+          ),
+        ),
+          child:  SafeArea(
         child: Column(
           children: [
             // 1. Cuore con nomi in alto
@@ -160,6 +185,61 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    )
     );
   }
+
+  void _showTokenPopup() async {
+  final api = ApiService();
+  final response = await api.getUserInfo();
+  final token = response["token"]; 
+
+  if (token == null || token.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Impossibile recuperare il token')),
+    );
+    return;
+  }
+
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+      title: const Text('Codice della coppia'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SelectableText(
+            token,
+            style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold, letterSpacing: 2),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            'Condividi questo codice con il tuo partner',
+            style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Chiudi'),
+        ),
+        ElevatedButton.icon(
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: token));
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Token copiato negli appunti!')),
+            );
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.copy, size: 18),
+          label: const Text('Copia'),
+        ),
+      ],
+    ),
+  );
+}
 }

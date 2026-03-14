@@ -42,7 +42,7 @@ class _reasonScreenState extends State<reasonScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tutti i reason'),
+        title: const Text('All reasons'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -76,7 +76,7 @@ class _reasonScreenState extends State<reasonScreen> {
               },
             )
           : _reasons.isEmpty
-              ? Center(child: Text('Nessun motivo ancora', style: TextStyle(fontSize: 18.sp)))
+              ? Center(child: Text('No reasons yet! Hurry your partner!', style: TextStyle(fontSize: 18.sp)))
               : ListView.builder(
                   padding: EdgeInsets.all(16.w),
                   itemCount: _reasons.length,

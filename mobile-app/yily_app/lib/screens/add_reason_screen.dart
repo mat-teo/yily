@@ -40,7 +40,7 @@ class _AddReasonScreenState extends State<AddReasonScreen> {
               controller: _contentController,
               maxLines: 6,
               decoration: InputDecoration(
-                hintText: 'Perché lo ami...',
+                hintText: "I love you 'cause...",
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(16.r)),
                 filled: true,
                 fillColor: Colors.white,
