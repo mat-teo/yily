@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:yily_app/core/widgets/count_widget.dart';
 import 'package:yily_app/models/reason.dart';
 import 'package:yily_app/services/api_service.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:yily_app/widgets/reason_card.dart';
 import 'reason_screen.dart';
 import 'package:flutter/services.dart'; 
 import 'package:provider/provider.dart';
 import 'package:yily_app/providers/user_provider.dart';
+import 'package:yily_app/core/widgets/random_reason_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,25 +24,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UserProvider>(context, listen: false).loadUserInfo();
-    _loadUserNames();
     _loadRandomReason();
   }
 
-  Future<void> _loadUserNames() async {
-    try {
-      final userProv = Provider.of<UserProvider>(context, listen: false);
-      setState(() {
-        mioNome = userProv.myName; 
-        partnerNome = userProv.partnerName ?? "Partner";
-      });
-    } catch (e) {
-      setState(() {
-        mioNome = "Tu";
-        partnerNome = "Partner";
-      });
-    }
-  }
   Reason? randomReason;
   bool isLoadingRandom = true;
 
@@ -64,6 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final userProv = Provider.of<UserProvider>(context, listen: true);
+
     return Scaffold(
         extendBodyBehindAppBar: true,
     appBar: AppBar(
@@ -99,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    mioNome ?? "Tu",
+                    userProv.myName ?? "Tu",
                     style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(width: 12.w),
@@ -117,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(width: 12.w),
                   Text(
-                    partnerNome ?? "Partner",
+                    userProv.partnerName ?? "Partner",
                     style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
                   ),
                 ],
@@ -125,40 +112,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             // 2. Card motivo random
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: isLoadingRandom
-                      ? Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            height: 280.h,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(28.r),
-                            ),
-                          ),
-                        )
-                      : randomReason == null
-                          ? Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.favorite_border, size: 64.w, color: Colors.grey[400]),
-                                SizedBox(height: 16.h),
-                                Text(
-                                  "Ancora nessun motivo",
-                                  style: TextStyle(fontSize: 18.sp, color: Colors.grey[600]),
-                                ),
-                              ],
-                            )
-                          : ReasonCard(
-                              reason: randomReason!,
-                            ).animate().fadeIn(duration: 600.ms).scale(begin: const Offset(0.94, 0.94), end: const Offset(1.0, 1.0)),
-                ),
-              ),
-            ),
+            const RandomReasonWidget(),
+
+            const CountsWidget(),
+
+            const Spacer(),
 
             // 3. Navbar in basso
             BottomNavigationBar(

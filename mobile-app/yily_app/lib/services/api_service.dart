@@ -64,10 +64,21 @@ class ApiService {
     return (response.data as List).map((json) => Reason.fromJson(json)).toList();
   }
 
+  // Lista motivi inviati
+  Future<List<Reason>> getSentReasons() async {
+    final response = await _dio.get('/reasons/my', queryParameters: {'sent_only': true});
+    return (response.data as List).map((json) => Reason.fromJson(json)).toList();
+  }
+
   // Counts
   Future<Map<String, dynamic>> getCounts() async {
     final response = await _dio.get('/reasons/counts');
     return response.data;
+  }
+
+  // Update reason
+  Future<void> updateReason(int id, String newContent) async {
+    await _dio.put('/reasons/$id', data: {'content': newContent});
   }
 
   // Random

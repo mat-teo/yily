@@ -4,6 +4,7 @@ import 'package:yily_app/services/api_service.dart';
 class UserProvider with ChangeNotifier {
   String? myName;
   String? partnerName;
+  int? userId;
   int? partnerId;
   String? coupleToken;
 
@@ -24,6 +25,7 @@ class UserProvider with ChangeNotifier {
         partnerName = users[1]['name'] as String?;
         partnerId = users[1]['id'] as int?;
       }
+      userId = users[0]['id'] as int?;
       coupleToken = data['token'] as String?;
 
       notifyListeners();

@@ -42,12 +42,14 @@ def add_reason(
 def get_my_reasons(
     current_user: User = Depends(get_current_user),
     received_only: bool = False,
+    sent_only: bool = False,
     db: Session = Depends(get_session)
 ):
     reasons = get_reasons_for_user(
         db=db,
         user_id=current_user.id,
-        only_received=received_only
+        only_received=received_only,
+        only_sent=sent_only
     )
     return reasons
 

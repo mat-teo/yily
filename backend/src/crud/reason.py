@@ -38,6 +38,7 @@ def get_reasons_for_user(
     db: Session,
     user_id: int,
     only_received: bool = False,
+    only_sent: bool = False
 ) -> list[Reason]:
     """
     Retrieve reasons for the user:
@@ -54,6 +55,9 @@ def get_reasons_for_user(
 
     if only_received:
         stmt = stmt.where(Reason.to_user_id == user_id)
+
+    if only_sent:
+        stmt = stmt.where(Reason.from_user_id == user_id)
 
     stmt = stmt.order_by(Reason.created_at.desc())
 
