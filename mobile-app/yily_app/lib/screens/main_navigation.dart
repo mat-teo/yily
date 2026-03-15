@@ -39,7 +39,7 @@ class _MainNavigationState extends State<MainNavigation> {
                   : _currentIndex == 1
                       ? 'Reasons'
                       : 'Settings',
-              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w600, color: Colors.black),
             ),
           ),
           centerTitle: false,
@@ -48,13 +48,13 @@ class _MainNavigationState extends State<MainNavigation> {
           automaticallyImplyLeading: false,
           actions: [
             IconButton(
-              icon: Icon(Icons.vpn_key_rounded, size: 24.w),
+              icon: Icon(Icons.vpn_key_rounded, size: 24.w, color: Colors.black,),
               tooltip: 'Mostra codice coppia',
               onPressed: () => _showTokenPopup(context),
             ),
           ],
         ),
-        body: IndexedStack(  // RIMOSSO SafeArea da qui
+        body: IndexedStack(  
           index: _currentIndex,
           children: _screens,
         ),

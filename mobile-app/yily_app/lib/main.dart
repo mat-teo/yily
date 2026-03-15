@@ -5,7 +5,6 @@
   import 'core/theme/app_theme.dart';
   import 'providers/auth_provider.dart';
   import 'screens/onboarding_screen.dart';
-  import 'screens/home_screen.dart';
   import 'providers/user_provider.dart';
 
   void main() async {
@@ -34,6 +33,8 @@
               title: 'Yily',
               debugShowCheckedModeBanner: false,
               theme: AppTheme.light,
+              darkTheme: AppTheme.dark,
+              themeMode: ThemeMode.system,
               initialRoute: '/',
               routes: {
                 '/': (context) => Consumer<AuthProvider>(
@@ -41,9 +42,9 @@
                       ? const MainNavigation()
                       : const OnboardingScreen(),
                 ),
-                '/home': (context) => const HomeScreen(),
+                '/home': (context) => const MainNavigation(),
                 '/onboarding': (context) => const OnboardingScreen(),
-              },
+              }
             ),
           );
         },

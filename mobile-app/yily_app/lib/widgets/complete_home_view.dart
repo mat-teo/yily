@@ -16,7 +16,7 @@ class CompleteHomeView extends StatelessWidget {
 
     // Aggiungi padding in alto per evitare sovrapposizione con AppBar
     return Padding(
-      padding: EdgeInsets.only(top: kToolbarHeight + 16.h), // Spazio per l'AppBar
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + kToolbarHeight), // Spazio per l'AppBar
       child: Column(
         children: [
           // 1. Cuore con nomi
@@ -59,7 +59,7 @@ class CompleteHomeView extends StatelessWidget {
           // 3. Motivo random
           const RandomReasonWidget(),
 
-          const Spacer(),
+          const Spacer()
         ],
       ),
     );
