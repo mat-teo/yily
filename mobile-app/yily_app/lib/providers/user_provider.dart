@@ -27,7 +27,7 @@ class UserProvider with ChangeNotifier {
       }
       userId = users[0]['id'] as int?;
       coupleToken = data['token'] as String?;
-
+            
       notifyListeners();
     } catch (e) {
       print('Errore loadUserInfo: $e');

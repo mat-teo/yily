@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:yily_app/providers/auth_provider.dart';
 import 'package:yily_app/services/api_service.dart';
 import'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,7 +21,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     setState(() => _isLoading = true);
     final api = ApiService();
-    final auth = Provider.of<AuthProvider>(context, listen: false);
 
     try {
       if (_isCreating) {
