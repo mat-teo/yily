@@ -6,6 +6,9 @@ import 'package:yily_app/screens/home_screen.dart';
 import 'package:yily_app/screens/reason_screen.dart'; 
 import 'package:yily_app/screens/settings_screen.dart';
 import 'package:yily_app/services/api_service.dart';
+import 'package:yily_app/providers/user_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:yily_app/screens/add_reason_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -23,38 +26,32 @@ class _MainNavigationState extends State<MainNavigation> {
     const SettingsScreen(),
   ];
 
-  @override
+@override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        extendBody: true, // Utile se vuoi che il body si estenda sotto la navbar
-        extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              _currentIndex == 0
-                  ? 'Yily'
-                  : _currentIndex == 1
-                      ? 'Reasons'
-                      : 'Settings',
-              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w600, color: Colors.black),
+              _currentIndex == 0 ? 'Yily' : _currentIndex == 1 ? 'Reasons' : 'Settings',
+              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w600),
             ),
           ),
           centerTitle: false,
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
           elevation: 0,
           automaticallyImplyLeading: false,
           actions: [
             IconButton(
-              icon: Icon(Icons.vpn_key_rounded, size: 24.w, color: Colors.black,),
+              icon: Icon(Icons.vpn_key_rounded, size: 24.w),
               tooltip: 'Mostra codice coppia',
               onPressed: () => _showTokenPopup(context),
             ),
           ],
         ),
-        body: IndexedStack(  
+        body: IndexedStack(
           index: _currentIndex,
           children: _screens,
         ),
@@ -67,12 +64,29 @@ class _MainNavigationState extends State<MainNavigation> {
           showUnselectedLabels: false,
           backgroundColor: Colors.white,
           elevation: 8,
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home_rounded, size: 28.w), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.favorite_rounded, size: 28.w), label: 'Reason'),
-            BottomNavigationBarItem(icon: Icon(Icons.settings_rounded, size: 28.w), label: 'Settings'),
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home_rounded, size: 28), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.favorite_rounded, size: 28), label: 'Reason'),
+            BottomNavigationBarItem(icon: Icon(Icons.settings_rounded, size: 28), label: 'Settings'),
           ],
         ),
+        floatingActionButton: _currentIndex == 1
+            ? Consumer<UserProvider>(
+                builder: (context, userProv, child) {
+                  if (!userProv.hasPartner) return const SizedBox.shrink();
+                  return FloatingActionButton(
+                    onPressed: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const AddReasonScreen()),
+                      );
+                      if (result == true) setState(() {});
+                    },
+                    child: const Icon(Icons.add),
+                  );
+                },
+              )
+            : null,
       ),
     );
   }

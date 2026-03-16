@@ -6,6 +6,7 @@
   import 'providers/auth_provider.dart';
   import 'screens/onboarding_screen.dart';
   import 'providers/user_provider.dart';
+  import 'providers/theme_provider.dart';
 
   void main() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -28,23 +29,26 @@
             providers: [
               ChangeNotifierProvider(create: (_) => AuthProvider()..init()),
               ChangeNotifierProvider(create: (_) => UserProvider()..loadUserInfo()),
+              ChangeNotifierProvider(create: (_) => ThemeProvider())
             ],
-            child: MaterialApp(
-              title: 'Yily',
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.light,
-              darkTheme: AppTheme.dark,
-              themeMode: ThemeMode.system,
-              initialRoute: '/',
-              routes: {
-                '/': (context) => Consumer<AuthProvider>(
-                  builder: (context, auth, _) => auth.isAuthenticated
-                      ? const MainNavigation()
-                      : const OnboardingScreen(),
-                ),
-                '/home': (context) => const MainNavigation(),
-                '/onboarding': (context) => const OnboardingScreen(),
-              }
+            child: Builder(
+              builder: (context) => MaterialApp(
+                title: 'Yily',
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.light,
+                darkTheme: AppTheme.dark,
+                themeMode: Provider.of<ThemeProvider>(context).themeMode,
+                initialRoute: '/',
+                routes: {
+                  '/': (context) => Consumer<AuthProvider>(
+                    builder: (context, auth, _) => auth.isAuthenticated
+                        ? const MainNavigation()
+                        : const OnboardingScreen(),
+                  ),
+                  '/home': (context) => const MainNavigation(),
+                  '/onboarding': (context) => const OnboardingScreen(),
+                }
+              ),
             ),
           );
         },

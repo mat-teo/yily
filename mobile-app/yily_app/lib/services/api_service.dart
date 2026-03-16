@@ -99,4 +99,24 @@ class ApiService {
     return response.data;
   }
 
+  Future<void> setAnniversaryDate(DateTime date) async {
+   try {
+    final response = await _dio.put(
+      '/couples/anniversary',
+      data: {
+        'anniversary_date': date.toIso8601String().split('T')[0], // es: "2025-03-16"
+      },
+    );
+
+    print('Anniversary saved: ${response.data}');
+    return;
+  } catch (e) {
+    print('Errore setAnniversaryDate: $e');
+    if (e is DioException) {
+      print('Response data: ${e.response?.data}');
+    }
+    rethrow;
+  }
+  }
+
 }

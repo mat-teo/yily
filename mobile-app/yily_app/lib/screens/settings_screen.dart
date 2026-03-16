@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:yily_app/providers/auth_provider.dart';
 import 'package:yily_app/providers/user_provider.dart';
+import 'package:yily_app/providers/theme_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -35,13 +36,10 @@ class SettingsScreen extends StatelessWidget {
           SwitchListTile(
             secondary: const Icon(Icons.brightness_6),
             title: Text('Tema scuro', style: TextStyle(fontSize: 16.sp)),
-            value: Theme.of(context).brightness == Brightness.dark,
+            value: Provider.of<ThemeProvider>(context, listen: true).isDarkMode,
             onChanged: (value) {
-              // Qui dovresti avere un ThemeProvider per cambiare tema globalmente
-              // Per ora placeholder
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Tema ${value ? "scuro" : "chiaro"} attivato (da implementare)')),
-              );
+              final themeProv = Provider.of<ThemeProvider>(context, listen: false);
+              themeProv.setThemeMode(value ? ThemeMode.dark : ThemeMode.light);
             },
           ),
 

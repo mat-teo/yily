@@ -1,12 +1,13 @@
 # api/routers/couple.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
-
+from models.couple import Couple
 from database import get_session
-from schemas.couple import CreateCoupleRequest, JoinCoupleRequest, CoupleCreateResponse, JoinCoupleResponse, CoupleOut
+from schemas.couple import CreateCoupleRequest, JoinCoupleRequest, CoupleCreateResponse, JoinCoupleResponse, CoupleOut, AnniversaryRequest
 from crud.couple import create_couple, join_couple, get_couple_by_id
 from api.dependencies import create_access_token, get_current_user
 from models.user import User
+from datetime import datetime, date
 
 router = APIRouter(prefix="/couples", tags=["couples"])
 
@@ -65,5 +66,29 @@ def get_couple_info(
     return CoupleOut(
         id=couple.id,
         token=couple.token,
+        anniversary_date=couple.anniversary_date,
         users=[{"id": u.id, "name": u.name} for u in couple.users]
     )
+
+@router.put("/anniversary", response_model=dict)
+def set_anniversary_date(
+    request: AnniversaryRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_session)
+):
+    if current_user.couple_id is None:
+        raise HTTPException(400, "You don't belong to any couple")
+
+    couple = db.get(Couple, current_user.couple_id)
+    if couple is None:
+        raise HTTPException(404, "Couple not found")
+
+    couple.anniversary_date = request.anniversary_date
+    db.add(couple)
+    db.commit()
+    db.refresh(couple)
+
+    return {
+        "message": "Anniversary date updated successfully",
+        "anniversary_date": couple.anniversary_date.isoformat()
+    }

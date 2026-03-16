@@ -1,6 +1,7 @@
 # schemas/couple.py
 from pydantic import BaseModel
 from typing import List, Optional
+from datetime import date
 
 class UserOut(BaseModel):
     id: int
@@ -12,6 +13,7 @@ class UserOut(BaseModel):
 class CoupleOut(BaseModel):
     id: int
     token: str
+    anniversary_date: Optional[date] = None
     users: List[UserOut]
 
     class Config:
@@ -42,3 +44,6 @@ class RecoverResponse(BaseModel):
     user: UserOut
     couple: dict
     partner: Optional[UserOut] = None
+
+class AnniversaryRequest(BaseModel):
+    anniversary_date: date

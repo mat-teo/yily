@@ -8,6 +8,8 @@ class UserProvider with ChangeNotifier {
   int? partnerId;
   String? coupleToken;
 
+  DateTime? anniversaryDate;
+
   bool get hasPartner => partnerName != null && partnerId != null;
 
   Future<void> loadUserInfo() async {
@@ -27,7 +29,14 @@ class UserProvider with ChangeNotifier {
       }
       userId = users[0]['id'] as int?;
       coupleToken = data['token'] as String?;
-            
+
+      final anniversaryStr = data['anniversary_date'] as String?;
+      if (anniversaryStr != null && anniversaryStr.isNotEmpty) {
+        anniversaryDate = DateTime.parse(anniversaryStr);
+      } else {
+        anniversaryDate = null;
+      }
+
       notifyListeners();
     } catch (e) {
       print('Errore loadUserInfo: $e');
@@ -39,6 +48,7 @@ class UserProvider with ChangeNotifier {
     partnerName = null;
     partnerId = null;
     coupleToken = null;
+    anniversaryDate = null;
     notifyListeners();
   }
 }
