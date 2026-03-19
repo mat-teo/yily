@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yily_app/services/api_service.dart';
 import'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yily_app/screens/main_navigation.dart';
 
 
 class OnboardingScreen extends StatefulWidget {
@@ -34,7 +35,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         }
         await api.joinCouple(_tokenController.text.trim(), _nameController.text.trim());
       }
-      Navigator.pushReplacementNamed(context, '/home');
+     Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const MainNavigation()),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Errore: $e')),

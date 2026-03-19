@@ -28,6 +28,8 @@ class _MainNavigationState extends State<MainNavigation> {
 
 @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -36,11 +38,11 @@ class _MainNavigationState extends State<MainNavigation> {
             alignment: Alignment.centerLeft,
             child: Text(
               _currentIndex == 0 ? 'Yily' : _currentIndex == 1 ? 'Reasons' : 'Settings',
-              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w600, color: isDark ? Colors.white : Colors.black87),
             ),
           ),
           centerTitle: false,
-          backgroundColor: Colors.white,
+          backgroundColor: isDark ? const Color(0xFF1A0F14) : Colors.white,
           elevation: 0,
           automaticallyImplyLeading: false,
           actions: [
@@ -59,10 +61,10 @@ class _MainNavigationState extends State<MainNavigation> {
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
           selectedItemColor: const Color(0xFFFF6B6B),
-          unselectedItemColor: Colors.grey[600],
+          unselectedItemColor: isDark ? Colors.grey[400] : Colors.grey[600],
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          backgroundColor: Colors.white,
+          backgroundColor: isDark ? const Color(0xFF1A0F14) : Colors.white,
           elevation: 8,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home_rounded, size: 28), label: 'Home'),

@@ -9,8 +9,16 @@ class ReasonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    return SizedBox(
+      width: double.infinity,           
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        child: Card(
+      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 0), // orizzontale = 0
+      elevation: 0, // rimuove l'ombra
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12), // mantieni gli angoli arrotondati
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -28,6 +36,6 @@ class ReasonCard extends StatelessWidget {
           ],
         ),
       ),
-    );
+    )));
   }
 }

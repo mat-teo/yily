@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:yily_app/providers/auth_provider.dart';
 import 'package:yily_app/providers/user_provider.dart';
 import 'package:yily_app/providers/theme_provider.dart';
+import 'package:yily_app/screens/onboarding_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -15,12 +16,6 @@ class SettingsScreen extends StatelessWidget {
     final userProv = Provider.of<UserProvider>(context, listen: true);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Impostazioni'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
       body: ListView(
         padding: EdgeInsets.all(16.w),
         children: [
@@ -68,7 +63,10 @@ class SettingsScreen extends StatelessWidget {
               if (confirm == true) {
                 await authProv.logout(); // cancella token + notify
                 userProv.clear(); // pulisci nomi
-                Navigator.pushReplacementNamed(context, '/'); // o verso Onboarding
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+                );
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Logout effettuato')),
                 );
