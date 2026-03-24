@@ -12,42 +12,44 @@ class HeartNamesWidget extends StatelessWidget {
     final userProv = Provider.of<UserProvider>(context);
 
     return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 32.w),
-      child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              userProv.myName ?? "Tu",
-              style: TextStyle(
-                fontSize: 24.sp,
-                fontWeight: FontWeight.w700,
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 32.w),
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                userProv.myName ?? "Tu",
+                style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w700),
               ),
-            ),
-            SizedBox(width: 16.w),
-            Icon(
-              Icons.favorite,
-              color: const Color(0xFFFF6B6B),
-              size: 32.w,
-            ).animate(onPlay: (c) => c.repeat(reverse: true)).scaleXY(
-                  duration: 1800.ms,
-                  begin: 1.0,
-                  end: 1.3,
-                  curve: Curves.easeInOut,
-                ),
-            SizedBox(width: 16.w),
-            Text(
-              userProv.partnerName ?? "Partner",
-              style: TextStyle(
-                fontSize: 24.sp,
-                fontWeight: FontWeight.w700,
+              SizedBox(width: 16.w),
+              Icon(
+                Icons.favorite,
+                color: const Color(0xFFFF6B6B),
+                size: 32.w,
+              )
+                  .animate(
+                    onPlay: (controller) => controller.repeat(reverse: true),
+                  )
+                  .scaleXY(
+                    begin: 1.0,
+                    end: 1.25,
+                    duration: 1200.ms,
+                    curve: Curves.easeInOut,
+                  )
+                  .then()
+                  .shimmer(
+                    duration: 1800.ms,
+                    color: Colors.white.withOpacity(0.4),
+                  ),
+              SizedBox(width: 16.w),
+              Text(
+                userProv.partnerName ?? "Partner",
+                style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w700),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 }

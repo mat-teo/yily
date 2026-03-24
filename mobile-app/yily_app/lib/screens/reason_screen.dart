@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yily_app/models/reason.dart';
 import 'package:yily_app/services/api_service.dart';
+import 'package:yily_app/utils/error_handler.dart';
 import 'package:yily_app/widgets/reason_card.dart';
 import 'package:provider/provider.dart';
 import 'package:yily_app/providers/user_provider.dart';
@@ -39,11 +40,7 @@ class _ReasonScreenContentState extends State<ReasonScreenContent> {
       });
     } catch (e) {
       setState(() => _isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Errore caricamento: $e')),
-        );
-      }
+      ErrorHandler.showError(context, e);
     }
   }
 

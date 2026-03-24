@@ -76,7 +76,7 @@ class InvitePartnerView extends StatelessWidget {
                   TextButton(
                     onPressed: () async {
                       // Mostra un caricamento opzionale
-                      await userProv.loadUserInfo();
+                      await userProv.loadUserInfo(context);
                       // Dopo il refresh, il Consumer ricostruirà automaticamente la UI
                     },
                     child: Text('Ho già inserito il codice', style: TextStyle(fontSize: 16.sp)),

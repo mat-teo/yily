@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yily_app/services/api_service.dart';
 import'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yily_app/utils/error_handler.dart';
 
 class AddReasonScreen extends StatefulWidget {
   const AddReasonScreen({super.key});
@@ -22,7 +23,7 @@ class _AddReasonScreenState extends State<AddReasonScreen> {
       await api.addReason(_contentController.text.trim()); 
       Navigator.pop(context, true);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Errore: $e')));
+      ErrorHandler.showError(context, e);
     } finally {
       setState(() => _isLoading = false);
     }

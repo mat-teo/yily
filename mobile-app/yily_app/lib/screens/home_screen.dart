@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
      WidgetsBinding.instance.addPostFrameCallback((_) {
-    context.read<UserProvider>().loadUserInfo();
+    context.read<UserProvider>().loadUserInfo(context);
   });
   }
 
@@ -26,6 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(
       builder: (context, userProv, child) {
+        if(userProv.myName == null){
+          return const MaterialApp(
+                  home: Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  ),
+                );
+        }
         if (!userProv.hasPartner) {
           return const InvitePartnerView();
         }

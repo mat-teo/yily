@@ -1,7 +1,9 @@
 // services/api_service.dart
 import 'package:dio/dio.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:yily_app/models/reason.dart';
 import 'package:yily_app/services/storage_service.dart';
+import 'package:yily_app/utils/error_handler.dart';
 
 class ApiService {
   final Dio _dio = Dio(BaseOptions(
@@ -99,7 +101,7 @@ class ApiService {
     return response.data;
   }
 
-  Future<void> setAnniversaryDate(DateTime date) async {
+  Future<void> setAnniversaryDate(DateTime date, BuildContext context) async {
    try {
     final response = await _dio.put(
       '/couples/anniversary',
@@ -111,10 +113,7 @@ class ApiService {
     print('Anniversary saved: ${response.data}');
     return;
   } catch (e) {
-    print('Errore setAnniversaryDate: $e');
-    if (e is DioException) {
-      print('Response data: ${e.response?.data}');
-    }
+    ErrorHandler.showError(context, e);
     rethrow;
   }
   }

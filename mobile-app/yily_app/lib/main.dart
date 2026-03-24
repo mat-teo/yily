@@ -7,9 +7,11 @@ import 'package:yily_app/providers/auth_provider.dart';
 import 'package:yily_app/screens/onboarding_screen.dart';
 import 'package:yily_app/providers/user_provider.dart';
 import 'package:yily_app/providers/theme_provider.dart';
+import 'package:yily_app/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().init();
   runApp(const MyApp());
 }
 

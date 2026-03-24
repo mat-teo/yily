@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yily_app/services/api_service.dart';
+import 'package:yily_app/utils/error_handler.dart';
 
 class UserProvider with ChangeNotifier {
   String? myName;
@@ -12,7 +13,7 @@ class UserProvider with ChangeNotifier {
 
   bool get hasPartner => partnerName != null && partnerId != null;
 
-  Future<void> loadUserInfo() async {
+  Future<void> loadUserInfo(BuildContext context) async {
     try {
       final api = ApiService();
       final data = await api.getUserInfo(); 
@@ -39,7 +40,7 @@ class UserProvider with ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
-      print('Errore loadUserInfo: $e');
+      ErrorHandler.showError(context, e);
     }
   }
 
